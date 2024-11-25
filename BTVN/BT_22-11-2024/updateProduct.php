@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Xử lý upload ảnh nếu có
     $image = null;
     if (!empty($_FILES['image']['name'])) {
-        $image = 'uploads/' . basename($_FILES['image']['name']);
+        $image = 'images/' . basename($_FILES['image']['name']);
         move_uploaded_file($_FILES['image']['tmp_name'], $image);
     }
 

@@ -11,7 +11,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     $image = '';
     if(isset($_FILES['image']) && $_FILES['image']['error'] == 0){
-        $targetDir = 'uploads/';
+        $targetDir = 'images/';
         $targetFile = $targetDir.basename($_FILES['image']['name']);
         $imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
 
