@@ -114,7 +114,7 @@
 <div id="addFlowerModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="add.php" method="POST" enctype="multipart/form-data">
+            <form action="crud/add.php" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h4 class="modal-title">Add New Flower</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -145,7 +145,7 @@
 <div id="deleteFlowerModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="deleteForm" method="GET" action="delete.php">
+            <form id="deleteForm" method="GET" action="crud/delete.php">
                 <div class="modal-header">
                     <h4 class="modal-title">Delete Product</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
