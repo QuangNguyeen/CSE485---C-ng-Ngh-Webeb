@@ -37,7 +37,7 @@
 <body>
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
-    <a class="navbar-brand" href="#">Hoa Xuân Hè</a>
+    <a class="navbar-brand" href="index.php">Hoa Xuân Hè</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -47,7 +47,7 @@
                 <a class="nav-link" href="#">Admin</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="#">User</a>
+                <a class="nav-link" href="user.php">User</a>
         </ul>
     </div>
 </nav>
@@ -58,9 +58,13 @@
             <div class="table-title bg-danger">
                 <div class="row">
                     <div class="col-sm-9">
-                        <h1>14 Loại hoa tuyệt đẹp dịp xuân hè</h1>
-                    </div>
-                    <div class="col-sm-6">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h1>List Flower Management</h1>
+                            <a href="#addFlowerModal" class="btn btn-success" data-toggle="modal">
+                                <i class="material-icons">&#xE147;</i>
+                                <span>Add New Product</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,20 +79,101 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Thomas Hardy</td>
-                    <td>89 Chiaroscuro Rd.</td>
-                    <td>USA</td>
-                    <td>
-                        <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-                    </td>
-                </tr>
+                    <?php $data = json_decode(file_get_contents('flowers.json'), true); ?>
+                    <?php foreach ($data as $item): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($item['id']); ?></td>
+                            <td>
+                                <img src="<?php echo htmlspecialchars($item['image']); ?>"
+                                     alt="<?php echo htmlspecialchars($item['name']); ?>"  width="200rem" height="180rem">
+                            </td>
+                            <td><?php echo htmlspecialchars($item['name']); ?></td>
+                            <td style="text-align: justify;"><?php echo htmlspecialchars($item['description']); ?></td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-info btn-sm edit-btn" data-toggle="modal" data-target="#updateFlowerModal"
+                                            data-id="<?php echo $item['id']; ?>"
+                                            data-name="<?php echo htmlspecialchars($item['name']); ?>"
+                                            data-description="<?php echo htmlspecialchars($item['description']); ?>"
+                                            data-image="<?php echo htmlspecialchars($item['image']); ?>">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteFlowerModal"
+                                            data-id="<?php echo $item['id']; ?>">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+<!--- Add new flower-->
+<div id="addFlowerModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="add.php" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Flower</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>File</label>
+                        <input class="form-control" type="file" name="image" id="formFile" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-success" value="Add">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!---Delete flower --->
+<div id="deleteFlowerModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteForm" method="GET" action="delete.php">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Product</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this flower?</p>
+                    <p class="text-warning"><small>This action cannot be undone.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="id" id="deleteId">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-danger" value="Delete">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const deleteButtons = document.querySelectorAll('.btn-danger[data-toggle="modal"]');
+        const deleteIdField = document.getElementById('deleteId');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const flowerId = button.getAttribute('data-id');
+                deleteIdField.value = flowerId;
+            });
+        });
+    });
+</script>
 </body>
 </html>
