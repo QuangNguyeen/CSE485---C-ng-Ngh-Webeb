@@ -1,5 +1,6 @@
 <?php
-require_once '../models/Product.php';
+require_once __DIR__ . '/../models/Product.php';
+
 class ProductController{
     private $productModel;
     public function __construct()
@@ -9,7 +10,7 @@ class ProductController{
     public function index()
     {
         $products =  $this->productModel->getAll();
-        require '../views/products/index.php';
+        include '../views/products/index.php';
     }
     public function add(){
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -29,7 +30,7 @@ class ProductController{
     public function delete($id)
     {
         $this->productModel->delete($id);
-        header('Location: /');
+        require '../views/products/delete.php';
     }
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-class DatabaseConfig{
+class Database{
     const HOST = 'localhost';
     const DB_NAME = 'CSE485';
     const USERNAME = 'root';
