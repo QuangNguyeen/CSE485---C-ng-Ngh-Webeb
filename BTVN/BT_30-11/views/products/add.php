@@ -1,30 +1,55 @@
 <?php
 require '../../models/Product.php';
 $productModel = new Product();
+
+// Kiểm tra ID sản phẩm
+$id = $_GET['id'] ?? null;
+if (!$id || !is_numeric($id)) {
+    header("Location: index.php");
+    exit;
+}
+$product = $productModel->getByID($id);
+$imageOldPath = $product['image'];
+if (!$product) {
+    echo "Product not found.";
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $product = [
-        'name' => $_POST['name'],
-        'price' => $_POST['price'],
-        'description' => $_POST['description'],
-        'image' => ''
-    ];
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $name = $_POST['name'] ?? '';
+    $price = $_POST['price'] ?? 0;
+    $description = $_POST['description'] ?? '';
+    $image = $_FILES['image']['name'] ?? '';
+    if ($image) {
         $targetDir = "../../image/";
-        $fileName = basename($_FILES['image']['name']);
+        $fileName = time() . '-' . basename($_FILES['image']['name']);
         $targetFilePath = $targetDir . $fileName;
 
         if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFilePath)) {
-            $product['image'] = $targetFilePath;
+            $imagePath = $fileName;
+        } else {
+            echo "Error uploading image.";
+            exit;
         }
+    } else {
+        $imagePath = $imageOldPath;
     }
-    if ($productModel->add($product)) {
-        header('Location: index.php');
+
+    $updateSuccess = $productModel->update($id, [
+        'name' => $name,
+        'price' => $price,
+        'description' => $description,
+        'image' => $imagePath // Giữ nguyên ảnh cũ nếu không có ảnh mới
+    ]);
+
+    if ($updateSuccess) {
+        header("Location: index.php");
         exit;
     } else {
-        echo "Failed add new product";
+        echo "Error updating product!";
     }
 }
-$products = $productModel->getAll();
+?>
 ?>
 <!DOCTYPE html>
 <html lang="en">

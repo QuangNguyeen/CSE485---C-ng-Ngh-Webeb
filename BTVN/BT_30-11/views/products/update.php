@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     } else {
-        $imagePath = $product['image']; // Giữ nguyên đường dẫn ảnh cũ
+        $imagePath = $product['image'];
     }
     $updateSuccess = $productModel->update($id, [
         'name' => $name,
