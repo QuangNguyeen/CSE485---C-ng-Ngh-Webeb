@@ -1,36 +1,41 @@
 <?php
-    require '../../models/Product.php';
-    $productModel = new Product();
-    $id = $_GET['id'] ?? null;
-    if ($id) {
-        $product = $productModel->getByID($id);
-    } else {
-        echo "Product ID is missing.";
-    }
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $id = $_POST['id'];
-    $name = $_POST['name'];
-    $price = $_POST['price'];
-    $description = $_POST['description'];
-    $image = $_FILES['image']['name'];
+require '../../models/Product.php';
+$productModel = new Product();
+$id = $_GET['id'] ?? null;
+if (!$id || !is_numeric($id)) {
+    header("Location: index.php");
+    exit;
+}
+$product = $productModel->getByID($id);
+if (!$product) {
+    echo "Product not found.";
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['name'] ?? '';
+    $price = $_POST['price'] ?? 0;
+    $description = $_POST['description'] ?? '';
+    $image = $_FILES['image']['name'] ?? '';
     if ($image) {
         $imagePath = '../../image/' . time() . '-' . basename($image);
-        move_uploaded_file($_FILES['image']['tmp_name'], '../../image/' . $imagePath);
+        if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
+            echo "Error uploading image.";
+            exit;
+        }
     } else {
-        $product = $productModel->getByID($id);
-        $imagePath = $product['IMAGE'];
+        $imagePath = $product['image']; // Giữ nguyên đường dẫn ảnh cũ
     }
     $updateSuccess = $productModel->update($id, [
-        'NAME' => $name,
-        'PRICE' => $price,
-        'DESCRIPTION' => $description,
-        'IMAGE' => $imagePath
+        'name' => $name,
+        'price' => $price,
+        'description' => $description,
+        'image' => $imagePath
     ]);
     if ($updateSuccess) {
         header("Location: index.php");
         exit;
     } else {
-        error_log("Failed to update product!");
         echo "Error updating product!";
     }
 }
@@ -51,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div id="updateProductModal" >
     <div>
         <div class="modal-content">
-            <form action="index.php?action=update&id=<?= $product['ID']; ?>" method="POST" enctype="multipart/form-data">
+            <form action="" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h4 class="modal-title">Update Product</h4>
                 </div>
