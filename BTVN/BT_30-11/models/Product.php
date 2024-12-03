@@ -18,12 +18,12 @@ class Product{
     }
     public function add($product){
         $statement = $this->pdo->prepare("INSERT INTO PRODUCT(NAME, PRICE, DESCRIPTION, IMAGE) VALUE (?,?,?,?)");
-        return $statement->execute([$product['name'], $product['price'], $product['description'], $product['image']]);
+        return $statement->execute([$product['NAME'], $product['PRICE'], $product['DESCRIPTION'], $product['IMAGE']]);
     }
     public function update($id, $data)
     {
         $statement = $this->pdo->prepare("UPDATE PRODUCT SET NAME = ?, PRICE = ? , DESCRIPTION = ? , IMAGE = ? WHERE ID = ?");
-        return $statement->execute([$data['name'], $data['price'], $data['description'], $data['image'], $id]);
+        return $statement->execute([$data['NAME'], $data['PRICE'], $data['DESCRIPTION'], $data['IMAGE'], $id]);
 
     }
     public function delete($id)
