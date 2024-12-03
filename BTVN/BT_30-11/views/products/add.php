@@ -1,6 +1,29 @@
 <?php
 require '../../models/Product.php';
 $productModel = new Product();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product = [
+        'name' => $_POST['name'],
+        'price' => $_POST['price'],
+        'description' => $_POST['description'],
+        'image' => ''
+    ];
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $targetDir = "../../image/";
+        $fileName = basename($_FILES['image']['name']);
+        $targetFilePath = $targetDir . $fileName;
+
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFilePath)) {
+            $product['image'] = $targetFilePath;
+        }
+    }
+    if ($productModel->add($product)) {
+        header('Location: index.php');
+        exit;
+    } else {
+        echo "Failed add new product";
+    }
+}
 $products = $productModel->getAll();
 ?>
 <!DOCTYPE html>
@@ -14,15 +37,12 @@ $products = $productModel->getAll();
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/style.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div id="addProductModal">
     <div>
         <div class="modal-content">
-            <form action="index.php?action=add" method="POST" enctype="multipart/form-data">
+            <form action="" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h4 class="modal-title">Add Product</h4>
                 </div>
@@ -45,12 +65,21 @@ $products = $productModel->getAll();
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="button" class="btn btn-default" id="cancelBtn" value="Cancel">
                     <input type="submit" class="btn btn-success" value="Add">
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('cancelBtn').addEventListener('click', function () {
+        if (document.referrer) {
+            window.location.href = document.referrer;
+        } else {
+            window.location.href = 'index.php';
+        }
+    });
+</script>
 </body>
 </html>

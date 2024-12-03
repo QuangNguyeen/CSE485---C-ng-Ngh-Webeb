@@ -20,13 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $product = $productModel->getByID($id);
         $imagePath = $product['IMAGE'];
     }
-    $updateSuccess = $productModel->updateProduct($id, $name, $price, $description, $imagePath);
-
+    $updateSuccess = $productModel->update($id, [
+        'NAME' => $name,
+        'PRICE' => $price,
+        'DESCRIPTION' => $description,
+        'IMAGE' => $imagePath
+    ]);
     if ($updateSuccess) {
-        echo "Product updated successfully!";
         header("Location: index.php");
         exit;
     } else {
+        error_log("Failed to update product!");
         echo "Error updating product!";
     }
 }
@@ -42,15 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/style.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div id="updateProductModal" >
     <div>
         <div class="modal-content">
-            <form action="index.php?action=edit&id=<?= $product['ID']; ?>" method="POST" enctype="multipart/form-data">
+            <form action="index.php?action=update&id=<?= $product['ID']; ?>" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h4 class="modal-title">Update Product</h4>
                 </div>
@@ -78,12 +79,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="button" class="btn btn-default" id="cancelBtn" value="Cancel">
                     <input type="submit" class="btn btn-info" value="Save">
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('cancelBtn').addEventListener('click', function () {
+        if (document.referrer) {
+            window.location.href = document.referrer;
+        } else {
+            window.location.href = 'index.php';
+        }
+    });
+</script>
 </body>
 </html>
