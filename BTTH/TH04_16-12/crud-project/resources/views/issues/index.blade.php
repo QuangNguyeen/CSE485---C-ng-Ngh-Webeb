@@ -316,6 +316,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="pagination-wrapper">
+            {{ $issues->links('pagination::bootstrap-4') }}
+        </div>
     </div>
 </div>
 </body>
