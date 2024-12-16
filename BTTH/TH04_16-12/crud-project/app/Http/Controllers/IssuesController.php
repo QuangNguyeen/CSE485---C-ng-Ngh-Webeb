@@ -75,7 +75,6 @@ class IssuesController extends Controller
         $issue = Issue::find($id);
         $issue->update($request->all());
         return redirect()->route('issues.index')->with('success', 'Issue updated successfully.');
-
     }
 
     /**

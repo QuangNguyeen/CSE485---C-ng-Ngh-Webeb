@@ -41,7 +41,7 @@
     <div class="mb-3">
         <div class="form-group">
             <label for="urgency">Urgency</label>
-            <select name="urgency" class="form-control" required>
+            <select name="urgency" class="form-control" id="urgency" name="urgency" required>
                 <option value="Low" {{ $issue->urgency == 'Low' ? 'selected' : '' }}>Low</option>
                 <option value="Medium" {{ $issue->urgency == 'Medium' ? 'selected' : '' }}>Medium</option>
                 <option value="High" {{ $issue->urgency == 'High' ? 'selected' : '' }}>High</option>
@@ -51,8 +51,8 @@
     <div class="mb-3">
         <div class="form-group">
             <label for="status">Status</label>
-            <select name="status" class="form-control" required>
-                <option value="Pending" {{ $issue->status == 'Open' ? 'selected' : '' }}>Open</option>
+            <select name="status" class="form-control" id="status" name="status" required>
+                <option value="Open" {{ $issue->status == 'Open' ? 'selected' : '' }}>Open</option>
                 <option value="In Progress" {{ $issue->status == 'In Progress' ? 'selected' : '' }}>In Progress</option>
                 <option value="Resolved" {{ $issue->status == 'Resolved' ? 'selected' : '' }}>Resolved</option>
             </select>
