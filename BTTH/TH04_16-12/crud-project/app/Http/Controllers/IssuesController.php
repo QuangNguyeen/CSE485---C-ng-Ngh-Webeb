@@ -38,8 +38,9 @@ class IssuesController extends Controller
             'urgency' => 'required',
             'status' => 'required'
         ]);
+        Issue::create($request->all());
+        return redirect()->route('issues.index')->with('success', 'Issue created successfully.');
     }
-
     /**
      * Display the specified resource.
      */
@@ -53,7 +54,9 @@ class IssuesController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $issue = Issue::findOrFail($id);
+        $computers = Computer::all();
+        return view('issues.edit', compact('issue', 'computers'));
     }
 
     /**
@@ -61,7 +64,18 @@ class IssuesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'computer_id' => 'required',
+            'reported_by' => 'required|max:50',
+            'reported_date' => 'required',
+            'description' => 'required',
+            'urgency' => 'required',
+            'status' => 'required'
+        ]);
+        $issue = Issue::find($id);
+        $issue->update($request->all());
+        return redirect()->route('issues.index')->with('success', 'Issue updated successfully.');
+
     }
 
     /**
@@ -69,6 +83,8 @@ class IssuesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $issue = Issue::findOrFail($id);
+        $issue->delete();
+        return redirect()->route('issues.index')->with('success', 'Issue deleted successfully.');
     }
 }
