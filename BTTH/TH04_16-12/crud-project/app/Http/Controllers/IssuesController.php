@@ -21,7 +21,8 @@ class IssuesController extends Controller
      */
     public function create()
     {
-        //
+        $computers = Computer::all();
+        return view('issues.create', compact('computers'));
     }
 
     /**
@@ -29,7 +30,14 @@ class IssuesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'computer_id' => 'required',
+            'reported_by' => 'required|max:50',
+            'reported_date' => 'required',
+            'description' => 'required',
+            'urgency' => 'required',
+            'status' => 'required'
+        ]);
     }
 
     /**

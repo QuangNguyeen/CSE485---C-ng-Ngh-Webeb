@@ -18,10 +18,10 @@
     <div class="mb-3">
     </div>
     <div class="mb-3">
-        <label for="student_id" class="form-label">Computer</label>
+        <label for="student_id" class="form-label">Computer Name</label>
         <select class="form-control" id="computer_id" name="computer_id" required>
             @foreach($computers as $computer)
-            <option value="{{ $computer->id }}">{{ $computer->model }}</option>
+            <option value="{{ $computer->id }}">{{ $computer->computer_name }}</option>
             @endforeach
         </select>
     </div>
@@ -53,7 +53,7 @@
             <option value="Resolved">Resolved</option>
         </select>
     </div>
-    <button type="submit" class="btn btn-primary">Thêm</button>
+    <button type="submit" class="btn btn-primary">Add</button>
 </form>
 
 </body>
